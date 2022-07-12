@@ -22,18 +22,31 @@ public class MainActivity extends AppCompatActivity {
     private Button mostrar;
     static TextView titulo;
     static TextView recebe;
-    static MyThread server;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-            getSupportActionBar().hide();
+        getSupportActionBar().hide();
 
         //< 2 - Politicas de Uso
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         //>
+
+        //< 3 - Pegando IP
+        String ip = "";
+        try {
+            WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
+            ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Nao da pra por msotrar nenhum ip na tela recebe.setText("192.168.199.12");
+        Toast.makeText(getApplicationContext(), ip, Toast.LENGTH_LONG).show();
+
+        //
 
         mostrar = findViewById(R.id.mostrar);
         ler = findViewById(R.id.ler);
@@ -46,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(mostrar);
             }
         });
-        server = new MyThread();
-        new Thread(server).start();
 
         ler.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,31 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private class MyThread implements Runnable {
 
-        @Override
-        public void run() {
-            ServerSocket welcomeSocket = null;
-            try {
-                welcomeSocket = new ServerSocket(6790);
-                com.example.alterar.tcpserver server = new com.example.alterar.tcpserver();
-                server.start();
-                while (true) {
-                    Thread.sleep((long)(Math.random() * 10000));
-
-                    Socket socketConexao = welcomeSocket.accept();
-                    titulo.setText("Conexao realizada");
-                    BufferedReader doCliente = new BufferedReader(new InputStreamReader(socketConexao.getInputStream()));
-                    String dados = doCliente.readLine();
-                    recebe.setText(dados);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-
-        }
-    }
 
 }
