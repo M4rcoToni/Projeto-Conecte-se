@@ -29,8 +29,10 @@ public class QRCODE extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode);
         getSupportActionBar().hide();
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
         txt = findViewById(R.id.mostrar);
 
         cliente = new MyThread();
@@ -58,15 +60,15 @@ public class QRCODE extends AppCompatActivity {
     }
 
     private class MyThread implements Runnable {
-
         @Override
         public void run() {
             ServerSocket welcomeSocket = null;
             try {
                 welcomeSocket = new ServerSocket(6790);
-                com.example.alterar.tcpserver server = new com.example.alterar.tcpserver();
+                tcpserver server = new tcpserver();
                 server.start();
                 while (true) {
+
                     Thread.sleep((long)(Math.random() * 10000));
 
                     Socket socketConexao = welcomeSocket.accept();

@@ -37,7 +37,7 @@ public class tcpserver extends Thread{
         while(true){
             try {
                 String texto = read.nextLine();
-                Socket clientSocket = new Socket("127.0.0.1",6789);
+                Socket clientSocket = new Socket("192.168.40.129",6790);
                 DataOutputStream paraServidor = new DataOutputStream(clientSocket.getOutputStream());
                 BufferedReader doServidor = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 paraServidor.writeBytes(texto+"\n");
